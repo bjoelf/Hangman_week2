@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Text;
 
 namespace Hangman_week2
 {
@@ -30,56 +32,82 @@ namespace Hangman_week2
              * 
             */
 
+
             //One player (in our case the application) thinks of a word and the other player(s) tries to guess it by suggesting letters. 
-            Console.WriteLine(@"Hello dear user, time to play the handing man game! \nAnd I have choosen to use body parts as secret word. \nWicked huuh! ;)");
+            Console.WriteLine($"Hello dear user, time to play the handing man game! \nAnd I have choosen to use body parts as secret word. \nWicked huuh! ;)");
 
-            string bodypart = RandomBodyparts();
-            char[] guesses = new char[bodypart.Length];
+            string secretWord = RandomBodyParts().ToUpper();
+            Debug.Print(secretWord);
+            char[] guessArray = new char[secretWord.Length];
+            StringBuilder badGuesses = new StringBuilder();
+            bool keepGuessing = true;
 
-            for (int i = 0; i <guesses.Length; i++)
-                guesses[i] = '_';
-
-            Console.WriteLine($"I'l help you out a little... the word is {bodypart.Length.ToString()} letter long. Good luck :)");
-
-            for (int i = 0; i <10; ++i)
+            //fill guessArray with underscore chars...
+            for (int i = 0; i <guessArray.Length; i++)
             {
-                PrintGuessesToConsole(guesses);
+                guessArray[i] = '_';
+            }
 
-                char guess = char.Parse(Console.ReadLine());
-                bool result = ProcessGuess(guess);
-                if (result)
-                {
-                    //say congrats
+            Console.WriteLine($"I'l help you out a little... the word is {secretWord.Length.ToString()} letter long. Good luck :)");
+            do {
+                char Guess = char.Parse(Console.ReadLine().ToUpper());
+                if (GuessRight(Guess, secretWord))
+                { //correct guess...
+
+
+                    // add char to guessArray (at the correct place..!)
+
+
                 }
-                else
+                else 
                 {
-                    //say try again?
-
-                    //break loop if guessed the word?
+                    //bad guess
+                    //The incorrect letters the player has guessed, should be put inside a StringBuilder and presented to the playe
+                    badGuesses.Append(Guess + " ");
                     break;
                 }
+                PrintConsole(badGuesses, guessArray);
+            } while (keepGuessing);
+
+            //decide here if game in won or lost.
+            WonOrLost(guessArray);
+        }
+
+        static void WonOrLost(char[] correct)
+        {
+            if (true)
+            {
+                //Message
+            } else
+            {
+                //Message
+            }
+        }
+
+        static void PrintConsole(StringBuilder bad, char[] correct)
+        {
+            Console.Write(bad.ToString());
+            foreach (char c in correct)
+            {
+                Console.Write(c.ToString() + " ");
 
             }
         }
-        static void PrintGuessesToConsole(char[] guesses) 
+        static bool GuessRight(char guess, string secretWord)
         {
-            //Loopa igenom alla värden och skriv till konsol
-            foreach (char c in guesses)
-            {
-                Console.WriteLine(guesses.ToString());
-            }
-        }
-        static bool ProcessGuess(char guess)
-        {
+            int test = secretWord.IndexOf(guess);
+            
             bool ret = false;
 
+
             //loopa en matchning, om match stoppa in bokstaven i char arrayen på rätt plats.
+
 
             return ret;
         }
 
         /// The secret word should be randomly chosen from an array of Strings.
-        static string RandomBodyparts()
+        static string RandomBodyParts()
         {
             string[] bodyparts = { "Tooth", "Foot", "Leg", "Back", "Brain", "Heart", "Waist", "Hip", "Arm", "Liver" };
             return bodyparts[rnd.Next(bodyparts.Length)];
