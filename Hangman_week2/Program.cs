@@ -20,9 +20,10 @@ namespace Hangman_week2
             * 
             * Game Rules to implement:
             *   Done: • The player has 10 guesses to complete the word before losing the game.
+            *   
             *   • The player can make two type of guesses:
             *   Done: • Guess for a specific letter. If player guess a letter that occurs in the word, the program should update by inserting the letter in the correct position(s).
-            *   • Guess for the whole word. The player type in a word he/she thinks is the word. If the guess is correct player wins the game and the whole word is revealed. If the word is incorrect nothing should get revealed.
+            *   Done? • Guess for the whole word. The player type in a word he/she thinks is the word. If the guess is correct player wins the game and the whole word is revealed. If the word is incorrect nothing should get revealed.
             *   Done: • If the player guesses the same letter twice, the program will not consume a guess.
             * 
             * Code Requirements:
@@ -33,7 +34,7 @@ namespace Hangman_week2
            */
 
             //One player (in our case the application) thinks of a word and the other player(s) tries to guess it by suggesting letters. 
-            Console.WriteLine($"Hello dear user, time to play the handing man game! \nAnd I have choosen to use body parts as secret word. \nWicked huuh! ;)");
+            Console.WriteLine($"Hello dear user, time to play the hanging man game! \nAnd I have choosen to use body parts as secret word. ;)");
 
             string secretWord = RandomBodyParts().ToUpper();
             Debug.Print(secretWord);
@@ -51,6 +52,13 @@ namespace Hangman_week2
             
             do {
                 string strGuess = Console.ReadLine().ToUpper();
+
+                //filter on word length, or first char in string only
+                if (strGuess.Length != secretWord.Length)
+                {
+                    strGuess = strGuess.Substring(0, 1);
+                    Debug.Print(strGuess.Length.ToString());
+                }
 
                 //ORD lopp som tar varje bokstav i ordet om gissningen har samma längt som secret? Eller bara varje bokstav om > 1?
                 foreach (char Guess in strGuess)
