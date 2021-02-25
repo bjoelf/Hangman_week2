@@ -1,114 +1,137 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 
 namespace Hangman_week2
 {
     class Program
     {
-        static Random rnd = new Random();
-
-        static void Main(string[] args)
+        static void Main()
         {
-            /*
-             * Your assignment is to create a game called Hangman. 
-             * Hangman game is a pen and pencil guessing game for two or more players. 
-             * You can read more about it https://en.wikipedia.org/wiki/Hangman_(game).
-             * 
-             * Done: One player (in our case the application) thinks of a word and the other player(s) tries to guess it by suggesting letters. 
-             * The word to guess is represented by a row of dashes where each dash represents a letter in the word.
-             * 
-             * Game Rules to implement:
-             *   • The player has 10 guesses to complete the word before losing the game.
-             *   • The player can make two type of guesses:
-             *   • Guess for a specific letter. If player guess a letter that occurs in the word, the program should update by inserting the letter in the correct position(s).
-             *   • Guess for the whole word. The player type in a word he/she thinks is the word. If the guess is correct player wins the game and the whole word is revealed. If the word is incorrect nothing should get revealed.
-             *   • If the player guesses the same letter twice, the program will not consume a guess.
-             * 
-             * Code Requirements:
-             *   Done: • The secret word should be randomly chosen from an array of Strings.
-             *   • The incorrect letters the player has guessed, should be put inside a StringBuilder and presented to the player after each guess.
-             *   • The correct letters should be put inside a char array. Unrevealed letters need to be represented by a lower dash ( _ ).
-             * 
-            */
 
+            /*
+            * Your assignment is to create a game called Hangman. 
+            * Hangman game is a pen and pencil guessing game for two or more players. 
+            * You can read more about it https://en.wikipedia.org/wiki/Hangman_(game).
+            * 
+            * Done: One player (in our case the application) thinks of a word and the other player(s) tries to guess it by suggesting letters. 
+            * Done: The word to guess is represented by a row of dashes where each dash represents a letter in the word.
+            * 
+            * Game Rules to implement:
+            *   Done: • The player has 10 guesses to complete the word before losing the game.
+            *   • The player can make two type of guesses:
+            *   Done: • Guess for a specific letter. If player guess a letter that occurs in the word, the program should update by inserting the letter in the correct position(s).
+            *   • Guess for the whole word. The player type in a word he/she thinks is the word. If the guess is correct player wins the game and the whole word is revealed. If the word is incorrect nothing should get revealed.
+            *   Done: • If the player guesses the same letter twice, the program will not consume a guess.
+            * 
+            * Code Requirements:
+            *   Done: • The secret word should be randomly chosen from an array of Strings.
+            *   Done: • The incorrect letters the player has guessed, should be put inside a StringBuilder and presented to the player after each guess.
+            *   Done: • The correct letters should be put inside a char array. Unrevealed letters need to be represented by a lower dash ( _ ).
+            * 
+           */
 
             //One player (in our case the application) thinks of a word and the other player(s) tries to guess it by suggesting letters. 
             Console.WriteLine($"Hello dear user, time to play the handing man game! \nAnd I have choosen to use body parts as secret word. \nWicked huuh! ;)");
 
             string secretWord = RandomBodyParts().ToUpper();
             Debug.Print(secretWord);
-            char[] guessArray = new char[secretWord.Length];
             StringBuilder badGuesses = new StringBuilder();
             bool keepGuessing = true;
 
-            //fill guessArray with underscore chars...
+            //Define and fill guessArray with underscore chars...
+            char[] guessArray = new char[secretWord.Length];
             for (int i = 0; i <guessArray.Length; i++)
             {
                 guessArray[i] = '_';
             }
 
-            Console.WriteLine($"I'l help you out a little... the word is {secretWord.Length.ToString()} letter long. Good luck :)");
+            Console.WriteLine($"I'l help you out a little... the word is {secretWord.Length} letter long. Good luck :)");
+            
             do {
-                char Guess = char.Parse(Console.ReadLine().ToUpper());
-                if (GuessRight(Guess, secretWord))
-                { //correct guess...
+                string strGuess = Console.ReadLine().ToUpper();
 
-
-                    // add char to guessArray (at the correct place..!)
-
-
-                }
-                else 
+                //ORD lopp som tar varje bokstav i ordet om gissningen har samma längt som secret? Eller bara varje bokstav om > 1?
+                foreach (char Guess in strGuess)
                 {
-                    //bad guess
-                    //The incorrect letters the player has guessed, should be put inside a StringBuilder and presented to the playe
-                    badGuesses.Append(Guess + " ");
-                    break;
+                    if (GuessRight(Guess, secretWord))
+                    {
+                        // = correct guess. add char to guessArray (at the correct place(s)..! Can be more than one occurrance)
+                        for (int i = 0; i < secretWord.Length; ++i)
+                        {
+                            if (Guess.Equals(secretWord[i]))
+                            {
+                                guessArray[i] = Guess;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //bad guess: The incorrect letters the player has guessed, should be put inside a StringBuilder and presented to the player. But not same letter twise
+                        if (badGuesses.ToString().IndexOf(Guess) < 0)
+                        {
+                            badGuesses.Append(Guess + " ");
+                        }
+                        //break loop if unique guesses is > 10. Equals 20 char in the stringbuilder as it ads a whitespace for readibility
+                        if (badGuesses.Length > 20) break;
+                    }
+
+                    //slut ord loop
                 }
                 PrintConsole(badGuesses, guessArray);
+
+                //break loop is array is filld ( = no underscores left) 
+                if (!guessArray.Contains('_')) break;
+
             } while (keepGuessing);
 
             //decide here if game in won or lost.
             WonOrLost(guessArray);
         }
-
-        static void WonOrLost(char[] correct)
+        static void WonOrLost(char[] guessArray)
         {
-            if (true)
+        //After loop break, evaluate if game is won or lost.
+            if (!guessArray.Contains('_'))
             {
-                //Message
+                Console.WriteLine("Congratts, you won");
             } else
             {
-                //Message
+                Console.WriteLine("Sorry, you lost :(");
             }
         }
-
         static void PrintConsole(StringBuilder bad, char[] correct)
         {
-            Console.Write(bad.ToString());
+            Console.Write("Current status: ");
             foreach (char c in correct)
             {
                 Console.Write(c.ToString() + " ");
-
             }
+
+            Console.WriteLine("  Bad guesses so far: " + bad.ToString());
         }
         static bool GuessRight(char guess, string secretWord)
         {
+        /// <summary>
+        /// Process if the guess was correct or not
+        /// </summary>
+        /// <param name="guess"></param>
+        /// <param name="secretWord"></param>
+        /// <returns></returns>
+            // is the guess contained in the secret word? If so, return true, else return false
             int test = secretWord.IndexOf(guess);
-            
-            bool ret = false;
-
-
-            //loopa en matchning, om match stoppa in bokstaven i char arrayen på rätt plats.
-
-
-            return ret;
+            if (test < 0)
+            {
+                return false;
+            } else
+            {
+                return true;
+            }
         }
-
-        /// The secret word should be randomly chosen from an array of Strings.
         static string RandomBodyParts()
         {
+        /// The secret word should be randomly chosen from an array of Strings.
+            Random rnd = new Random();
             string[] bodyparts = { "Tooth", "Foot", "Leg", "Back", "Brain", "Heart", "Waist", "Hip", "Arm", "Liver" };
             return bodyparts[rnd.Next(bodyparts.Length)];
         }
