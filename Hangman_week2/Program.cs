@@ -6,7 +6,7 @@ using System.IO;
 
 namespace Hangman_week2
 {
-    class Program
+    public class Program
     {
         static void Main()
         {
@@ -99,15 +99,17 @@ namespace Hangman_week2
         /// Test for game result and print to console..
         /// </summary>
         /// <param name="guessArray"></param>
-        static void WonOrLost(char[] guessArray)
+        public static bool WonOrLost(char[] guessArray)
         {
             if (!guessArray.Contains('_'))
             {
                 Console.WriteLine("Congrats, you won");
+                return true;
             } else
             {
                 Console.Beep();
                 Console.WriteLine("Sorry, you lost :(");
+                return false;
             }
         }
         /// <summary>
@@ -132,7 +134,7 @@ namespace Hangman_week2
         /// <param name="guess"></param>
         /// <param name="secretWord"></param>
         /// <returns></returns>
-        static bool GuessRight(char guess, string secretWord)
+        public static bool GuessRight(char guess, string secretWord)
         {
             int test = secretWord.IndexOf(guess);
             if (test < 0)
@@ -144,7 +146,7 @@ namespace Hangman_week2
                 return true;
             }
         }
-        static string RandomBodyParts() {
+        public static string RandomBodyParts() {
             // The secret word should be randomly chosen from an array of Strings.
 
             // version 1:
