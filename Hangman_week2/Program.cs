@@ -44,10 +44,12 @@ namespace Hangman_week2
 
             //Define and fill guessArray with underscore chars...
             char[] guessArray = new char[secretWord.Length];
-            for (int i = 0; i <guessArray.Length; i++)
-            {
-                guessArray[i] = '_';
-            }
+            //for (int i = 0; i <guessArray.Length; i++)
+            //{
+            //    guessArray[i] = '_';
+            //}
+
+            Array.Fill(guessArray, '_');
 
             Console.WriteLine($"I'l help you out a little... the word is {secretWord.Length} letter long. Good luck :)");
             
@@ -147,12 +149,9 @@ namespace Hangman_week2
             }
         }
         public static string RandomBodyParts() {
-            // The secret word should be randomly chosen from an array of Strings.
-
-            // version 1:
             //string[] bodyparts = { "Tooth", "Foot", "Leg", "Back", "Brain", "Heart", "Waist", "Hip", "Arm", "Liver" };
 
-            // option, version 1:
+            // option, from file
             string path = "RandomWords.txt";
             string readText = File.ReadAllText(path);
             string[] bodyparts = readText.Split(',');
